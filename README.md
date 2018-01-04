@@ -7,6 +7,8 @@ PHP>=5.5<7.0
 #安装phalcon
 windows环境克隆项目后将phalcon扩展文件copy到PHP扩展目录并修改PHP配置文件，加载扩展文件
 Linux环境参考官方安装教程，[phalcon  Linux安装教程](http://docs.iphalcon.cn/reference/install.html#linux-solaris "phalcon  Linux安装教程")
+
+
 #自定义类
 - **DB类**，比框架自带的类更加易用，且支持多数据库读写分离，配置简单
 - **日志类**，使用phalcon修改版可以自动记录日志，日志包含请求日志和错误日志，当然这些都是可以在配置文件中关闭或者开启的
