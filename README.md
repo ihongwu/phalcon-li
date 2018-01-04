@@ -4,7 +4,7 @@ phalcon修改版并不是修改了phalcon框架扩展源码，而是在框架的
 Phalcon 是开源、全功能栈、使用 C 扩展编写、针对高性能优化的 PHP 5 框架。 开发者不需要学习和使用 C 语言的功能， 因为所有的功能都以 PHP 类的方式暴露出来，可以直接使用。 Phalcon 也是松耦合的，可以根据项目的需要任意使用其他对象。
 # PHP版本要求
 PHP>=5.5<7.0
-#安装phalcon
+# 安装phalcon
 windows环境克隆项目后将phalcon扩展文件copy到PHP扩展目录并修改PHP配置文件，加载扩展文件
 Linux环境参考官方安装教程，[phalcon  Linux安装教程](http://docs.iphalcon.cn/reference/install.html#linux-solaris "phalcon  Linux安装教程")
 
@@ -58,7 +58,7 @@ $this->db->table('table_name')->where('where')->save(data_array);
 ```
 $this->db->table('table_name')->where('where')->delete();
 ```
-如果以上方法满足不了需求，还可以使用query方法执行SQL语句，query方法支持增删改查，且能根据不同的操作类型给出不同的返回值，删除/修改返回布尔值，新增成功返回新增的ID，失败返回false，查询返回二维数组，如：
+如果以上方法满足不了，还可以使用query方法执行SQL语句，query方法支持增删改查，且能根据不同的操作类型给出不同的返回值，删除/修改返回布尔值，新增成功返回新增的ID，失败返回false，查询返回二维数组，如：
 ```
 $this->db->query('sql');
 ```
