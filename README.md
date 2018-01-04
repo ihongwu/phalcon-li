@@ -2,14 +2,14 @@
 phalcon修改版并不是修改了phalcon框架扩展源码，而是在框架的基础上增加了更加灵活的配置文件以及自定义类，如：DB类，日志类等，在此感谢phalcon作者提供这么好的框架！
 # phalcon
 Phalcon 是开源、全功能栈、使用 C 扩展编写、针对高性能优化的 PHP 5 框架。 开发者不需要学习和使用 C 语言的功能， 因为所有的功能都以 PHP 类的方式暴露出来，可以直接使用。 Phalcon 也是松耦合的，可以根据项目的需要任意使用其他对象。
-#PHP版本要求
+# PHP版本要求
 PHP>=5.5<7.0
 #安装phalcon
 windows环境克隆项目后将phalcon扩展文件copy到PHP扩展目录并修改PHP配置文件，加载扩展文件
 Linux环境参考官方安装教程，[phalcon  Linux安装教程](http://docs.iphalcon.cn/reference/install.html#linux-solaris "phalcon  Linux安装教程")
 
 
-#自定义类
+# 自定义类
 - **DB类**，比框架自带的类更加易用，且支持多数据库读写分离，配置简单
 - **日志类**，使用phalcon修改版可以自动记录日志，日志包含请求日志和错误日志，当然这些都是可以在配置文件中关闭或者开启的
 - **数据返回类**，调用方便，可以返回格式统一的json数据
