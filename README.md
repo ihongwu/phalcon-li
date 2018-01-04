@@ -58,7 +58,7 @@ $this->db->table('table_name')->where('where')->save(data_array);
 ```
 $this->db->table('table_name')->where('where')->delete();
 ```
-如果以上方法满足不了，还可以使用query方法执行SQL语句，query方法支持增删改查，且能根据不同的操作类型给出不同的返回值，删除/修改返回布尔值，新增成功返回新增的ID，失败返回false，查询返回二维数组，如：
+如果以上方法满足不了需求，还可以使用query方法执行SQL语句，query方法支持增删改查，且能根据不同的操作类型给出不同的返回值，删除/修改返回布尔值，新增成功返回新增的ID，失败返回false，查询返回二维数组，如：
 ```
 $this->db->query('sql');
 ```
