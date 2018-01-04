@@ -16,7 +16,7 @@ Linux环境参考官方安装教程，[phalcon  Linux安装教程](http://docs.i
 - **Token类**，如果你拿来作为接口服务使用又需要登录接口，则可以使用token类，验证token需要调用方将下发的token放在header头里面，key为token，如：token:xxxxxx
 - **CURL远程请求类**，可以方便的实现请求网络资源，可以自定义header头，调用方便
 - **配置文件获取类**，由于DB类支持数据库读写分离，所以自定义了配置文件sconfig.php，该配置文件的配置项可以使用配置文件获取类（Config.php）读取
-#类的使用
+# 类的使用
 ## DB类：
 **支持的方法：**
 ```php
