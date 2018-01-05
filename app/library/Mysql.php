@@ -14,6 +14,8 @@ class Mysql
 	public $table;
 	public $field;
 	public $where;
+	public $group;
+	public $having;
 	public $order;
 	public $limit;
 	public $switchd_db;
@@ -22,10 +24,12 @@ class Mysql
 	public $lastsql;
 	private static $_instance = null;
 	function __construct(){
-		$this->conn = $this->get('mysql.connection');
-		$this->master = false;
+		$this->conn  = $this->get('mysql.connection');
+		$this->master= false;
 		$this->field = '*';
 		$this->where = 1;
+		$this->group = '';
+		$this->having='';
 		$this->order = '';
 		$this->limit = '';
 		$this->switchd_db = false;
@@ -47,7 +51,7 @@ class Mysql
 	 * 获取数据库配置项，如果是查询，将获取到所有数据库中的其中的一个配置，如果是写数据，则只读取写库的配置
 	 * @return [type] [description]
 	 */
-	public function getdataconf(){
+	private function getdataconf(){
 		$result = array();
 		if ($this->conn=='') {
 			$this->conn = $this->get('mysql.connection');
@@ -94,7 +98,7 @@ class Mysql
 	 * 获取数据库链接（读数据使用该方法）
 	 * @return [source] 数据库链接资源
 	 */
-	public function getconnect(){
+	private function getconnect(){
 		if ($this->dbconn && $this->switchd_db==false) {
             return $this->dbconn;
         } else {
@@ -125,7 +129,7 @@ class Mysql
 	 * 获取数据库链接（写数据使用该方法）
 	 * @return [source] 数据库链接资源
 	 */
-	public function getwriteconnect(){
+	private function getwriteconnect(){
 		$this->master = true;
 		if ($this->wdbconn && $this->switchd_db==false) {
             return $this->wdbconn;
@@ -207,6 +211,21 @@ class Mysql
 	}
 
 	/**
+	 * 设置查询的分组
+	 * @param  string $group 分组规则
+	 * @return [type]        [description]
+	 */
+	public function group($group=''){
+		$this->group = $group;
+		return $this;
+	}
+
+	public function having($having=''){
+		$this->having = $having;
+		return $this;
+	}
+
+	/**
 	 * 设置查询排序
 	 * @param  string $order [description]
 	 * @return [type]        [description]
@@ -230,24 +249,41 @@ class Mysql
 	 * 初始化数据库方法参数，执行完sql语句后调用本方法还原
 	 * @return [type] [description]
 	 */
-	public function resetdb(){
+	private function resetdb(){
 		$this->master();
 		$this->table();
 		$this->field();
 		$this->where();
+		$this->group();
 		$this->order();
 		$this->limit();
+	}
+
+	private function getgroup(){
+		if ($this->group=='') {
+			return '';
+		}else{
+			return 'GROUP BY '.$this->group;
+		}
+	}
+
+	private function gethaving(){
+		if ($this->having=='') {
+			return '';
+		}else{
+			return 'HAVING '.$this->having;
+		}
 	}
 
 	/**
 	 * 获取排序组装的字符串
 	 * @return [type] [description]
 	 */
-	public function getorder(){
+	private function getorder(){
 		if ($this->order=='') {
 			return '';
 		}else{
-			return 'order by '.$this->order;
+			return 'ORDER BY '.$this->order;
 		}
 	}
 
@@ -255,11 +291,11 @@ class Mysql
 	 * 获取limit组装的字符串
 	 * @return [type] [description]
 	 */
-	public function getlimit(){
+	private function getlimit(){
 		if ($this->limit=='') {
 			return '';
 		}else{
-			return 'limit '.$this->limit;
+			return 'LIMIT '.$this->limit;
 		}
 	}
 
@@ -267,7 +303,7 @@ class Mysql
 	 * 获取表名
 	 * @return [type] [description]
 	 */
-	public function gettable(){
+	private function gettable(){
 		return $this->dbconfig['prefix'].$this->table;
 	}
 
@@ -281,9 +317,11 @@ class Mysql
 	 */
 	public function find(){
 		$dbconn = $this->getconnect();
+		$group  = $this->getgroup();
+		$having  = $this->gethaving();
         $order  = $this->getorder();
         $table = $this->gettable();
-        $this->lastsql = "SELECT {$this->field} FROM {$table} WHERE {$this->where} {$order} LIMIT 1";
+        $this->lastsql = "SELECT {$this->field} FROM {$table} WHERE {$this->where} {$group} {$having} {$order} LIMIT 1";
         $result = $dbconn->prepare($this->lastsql);
         $result->execute();
         $this->resetdb();
@@ -296,10 +334,12 @@ class Mysql
 	 */
 	public function select(){
 		$dbconn = $this->getconnect();
+		$group  = $this->getgroup();
+		$having  = $this->gethaving();
 		$order  = $this->getorder();
 		$limit = $this->getlimit();
         $table = $this->gettable();
-        $this->lastsql    = "SELECT {$this->field} FROM {$table} WHERE {$this->where} {$order} {$limit}";
+        $this->lastsql    = "SELECT {$this->field} FROM {$table} WHERE {$this->where} {$group} {$having} {$order} {$limit}";
         $result = $dbconn->prepare($this->lastsql);
         $result->execute();
         $this->resetdb();
@@ -313,9 +353,11 @@ class Mysql
 	 */
 	public function getField($field){
 		$dbconn = $this->getconnect();
+		$group  = $this->getgroup();
+		$having  = $this->gethaving();
         $order  = $this->getorder();
         $table = $this->gettable();
-        $this->lastsql    = "SELECT {$field} FROM {$table} WHERE {$this->where} {$order} LIMIT 1";
+        $this->lastsql    = "SELECT {$field} FROM {$table} WHERE {$this->where} {$group} {$having} {$order} LIMIT 1";
         $result = $dbconn->prepare($this->lastsql);
         $result->execute();
         $this->resetdb();
@@ -485,7 +527,7 @@ class Mysql
 		}
 	}
 
-	public function getSqlType($sql){
+	private function getSqlType($sql){
 		$sqltrim = str_replace(' ', '', strtolower($sql));
 		if (strpos($sqltrim,'select') === 0 && in_array('select', explode(' ',$sql))) {
 			return 'select';
@@ -501,9 +543,9 @@ class Mysql
 	}
 
 
-	public function getconfig(){
+	private function getconfig(){
         if(!$this->configfile){
-            $this->configfile = include APP_PATH.'/config/sconfig.php';
+            $this->configfile = include APP_PATH.'/config/wzjconfig.php';
         }
         return $this->configfile;
     }
@@ -513,7 +555,7 @@ class Mysql
      * @param  String $key 要获取的配置下标，如：mysql.conn1.master
      * @return Array、String  配置结果       
      */
-    public function get($key){
+    private function get($key){
         $configres = $this->getconfig();
         $pointer   = &$configres;
         if(trim($key)!=''){
