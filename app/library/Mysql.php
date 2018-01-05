@@ -377,7 +377,7 @@ class Mysql
         $field = implode(',', array_keys($data));
         $value = '';
         foreach ($data as $v) {
-        	$value .= "'".str_replace("'","\'",$v)."'".',';
+        	$value .= "'".str_replace("'","\'",addslashes($v))."'".',';
         }
         $value = substr($value, 0, -1);
 
