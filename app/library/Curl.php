@@ -52,20 +52,27 @@ class Curl {
      * @param int $is_post 是否是post请求
      */
     private  function doRequest($is_post = 0) {
-        $ch = curl_init();//初始化curl
-        curl_setopt($ch, CURLOPT_URL, $this->url); ##抓取指定网页
+        ##初始化curl
+        $ch = curl_init();
+        ##抓取指定网页
+        curl_setopt($ch, CURLOPT_URL, $this->url);
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
         // 来源设置成来自本站
         curl_setopt($ch, CURLOPT_REFERER, $this->oriUrl);
-        
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); ##要求结果为字符串且输出到屏幕上
-        if($is_post == 1) curl_setopt($ch, CURLOPT_POST, $is_post);//post提交方式
+        ##兼容https
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        ##要求结果为字符串且输出到屏幕上
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        //post提交方式
+        if($is_post == 1) curl_setopt($ch, CURLOPT_POST, $is_post);
         if (!empty($this->data)) {
             $this->data = $this->dealPostData($this->data);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data);
         }
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->header);
         $data = curl_exec($ch); ##运行curl    
+        echo curl_error($ch);
         curl_close($ch);
         return $data;
     }
